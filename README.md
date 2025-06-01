@@ -1,4 +1,4 @@
-# Web Chat en Tiempo Real con Validación de Usuario y UI Mejorada
+# Web Chat en Tiempo Real con Validación de Usuario, UI Mejorada y Lista de Conectados
 
 **Nombre del estudiante:** Jhonson Benigno Mendoza Jaramillo  
 **Fecha de entrega:** 30 de mayo de 2025  
@@ -7,25 +7,25 @@
 
 ## 🧠 Introducción
 
-Las aplicaciones en tiempo real representan un componente esencial en la experiencia web moderna. Este proyecto tiene como objetivo la creación de un sistema de **chat web interactivo en tiempo real**, que no solo permita la comunicación fluida entre usuarios, sino que garantice una correcta **validación de identidad mediante nombre único**, mejorando la organización y evitando colisiones dentro de la sala de conversación.
+Las aplicaciones en tiempo real son fundamentales en la experiencia web moderna. Este proyecto consiste en la creación de un sistema de **chat interactivo en tiempo real**, con validación de usuarios únicos y una interfaz moderna. Además, se ha incorporado una **lista dinámica de usuarios conectados**, mejorando la interacción y visibilidad dentro del sistema.
 
-El sistema se construyó utilizando **Node.js**, **Express**, y **Socket.IO** en el servidor, mientras que el lado cliente se apoya en **HTML5**, **JavaScript**, y **Bootstrap** para asegurar una interfaz responsiva, clara y moderna. El control de sesiones se gestiona a través de **cookies**, manteniendo la experiencia ligera y funcional.
+El backend se construyó con **Node.js**, **Express** y **Socket.IO**, mientras que el frontend emplea **HTML5**, **JavaScript** y **Bootstrap**, con manejo de sesiones a través de **cookies**.
 
-Este proyecto demuestra cómo el uso conjunto de estas tecnologías puede ofrecer una solución eficaz, robusta y con excelente experiencia de usuario, sin necesidad de sistemas de autenticación complejos.
+Este proyecto demuestra cómo tecnologías modernas pueden integrarse para ofrecer una solución eficiente, robusta y con excelente experiencia de usuario sin necesidad de mecanismos de autenticación complejos.
 
 ---
 
 ## 🧱 Estructura del Proyecto
 
-La organización de archivos del proyecto sigue una separación clara entre el lado del cliente y el servidor:
-
+La organización del proyecto separa claramente el lado del servidor y del cliente.
 
 ### 🔌 Backend
 
-- **index.js:**  
-  Configura el servidor Express, sirve archivos estáticos desde `/public`, y escucha peticiones HTTP.  
-- **realTimeServer.js:**  
-  Se encarga de toda la lógica de Socket.IO. Maneja las conexiones, desconexiones, validación de usuarios únicos y transmisión de mensajes entre todos los clientes conectados. Utiliza una estructura `Set` para garantizar unicidad de usuarios.
+- **index.js**  
+  Configura el servidor Express, sirve los archivos estáticos desde `/public` y escucha peticiones HTTP.
+
+- **realTimeServer.js**  
+  Maneja la lógica de Socket.IO: conexión, desconexión, validación de nombres únicos y la transmisión de mensajes. También gestiona la **lista actual de usuarios conectados** con un `Set`, que se sincroniza con todos los clientes en tiempo real.
 
 📸 **Vista del servidor configurado:**  
 ![Servidor Express y Socket.IO](https://imgur.com/JHSNRAO.png)
@@ -34,58 +34,105 @@ La organización de archivos del proyecto sigue una separación clara entre el l
 
 ### 💻 Frontend
 
-- **register.html:**  
-  Página de entrada para el usuario. Incluye un formulario simple donde se introduce el nombre, con validación activa.
-- **register.js:**  
-  Controla la validación en tiempo real del nombre, conexión con Socket.IO y alertas dinámicas con Bootstrap.
-- **index.html:**  
-  Interfaz principal del chat. Muestra los mensajes y el formulario de envío.
-- **script.js:**  
-  Establece conexión Socket.IO y renderiza nuevos mensajes automáticamente en pantalla.
+- **register.html**  
+  Página inicial donde el usuario ingresa su nombre con validación activa.
+
+- **register.js**  
+  Verifica que el nombre sea válido y se conecta al servidor. Gestiona errores con alertas Bootstrap y guarda el nombre en cookies.
+
+- **index.html**  
+  Interfaz principal del chat. Muestra el área de mensajes, formulario de envío y la **lista actualizada de usuarios conectados**.
+
+- **script.js**  
+  Se conecta a Socket.IO, renderiza mensajes en tiempo real y actualiza la lista de usuarios conectados cada vez que alguien entra o sale del chat.
 
 📸 **Vista del formulario de registro:**  
 ![Formulario Registro](https://imgur.com/NjOzswm.png)
+
+📸 **Vista de usuarios conectados:**  
+![Usuarios Conectados](https://imgur.com/ojDZMf4.png)
 
 ---
 
 ## 🛡️ Validación de Usuario
 
-Antes de ingresar al chat, se realiza una doble validación:
+Antes de acceder al chat, se realiza una validación de dos etapas:
 
-1. **Validación de frontend:**  
-   Se verifica que el nombre no esté vacío y no contenga caracteres inválidos. Además, se guarda temporalmente en cookies.
-2. **Validación de backend (Socket.IO):**  
-   Cuando el usuario intenta conectarse, el servidor comprueba si su nombre ya está registrado en la sesión actual. Si el nombre está en uso, se emite un mensaje de error y se deniega la entrada.
+1. **Frontend:**  
+   Se comprueba que el nombre no esté vacío ni tenga caracteres inválidos. Se guarda en cookies para reutilizarse.
 
-📸 **Vista de validación exitosa:**  
+2. **Backend:**  
+   Al intentar conectarse, el servidor revisa si el nombre ya está en uso por otro usuario conectado. Si está duplicado, se rechaza la conexión.
+
+📸 **Validación exitosa:**  
 ![Validación Exitosa](https://imgur.com/fzdeBUC.png)
 
-📸 **Vista de error al duplicar nombre:**  
+📸 **Error por nombre duplicado:**  
 ![Nombre Repetido](https://imgur.com/fJPUHHY.png)
 
 ---
 
-## 💬 Ejecución del Chat
+## 💬 Funcionalidad del Chat
 
-Una vez dentro, los usuarios pueden intercambiar mensajes en tiempo real. Cada mensaje enviado se propaga a todos los clientes conectados. Se emplea Bootstrap para estilizar los mensajes y los elementos del formulario.
+- Transmisión de mensajes en tiempo real entre todos los clientes.
+- Estilos limpios y adaptables gracias a Bootstrap.
+- Visualización inmediata de los nuevos mensajes en pantalla.
+- **Lista de usuarios conectados** visible y actualizada automáticamente.
 
 📸 **Chat en acción:**  
 ![Chat funcionando](https://imgur.com/VUezMoI.png)
 
-📸 **Visualización de cookies de usuario:**  
+📸 **Cookies del usuario:**  
 ![Cookies de sesión](https://imgur.com/S46WPgt.png)
+
+---
+
+## 👥 Lista Dinámica de Usuarios Conectados
+
+Cada vez que un usuario se conecta o desconecta, el servidor actualiza la lista y la transmite a todos los clientes. Esto permite:
+
+- Ver quién está disponible en tiempo real.
+- Evitar duplicidad de nombres de forma visual y lógica.
+
+📸 **Vista de actualización dinámica de usuarios:**  
+![Usuarios Conectados](https://imgur.com/tuEjRNu.png)
 
 ---
 
 ## 🎨 Interfaz de Usuario
 
-El uso de Bootstrap permitió implementar componentes modernos, como:
+Bootstrap permitió una interfaz moderna y funcional con:
 
-- Alertas para errores o notificaciones.
-- Formularios con estilos visualmente consistentes.
-- Diseño responsivo que se adapta a dispositivos móviles.
+- Alertas de error claras.
+- Formularios estilizados.
+- Responsividad para móviles.
+- Diseño limpio y enfocado en la experiencia del usuario.
 
 ---
+
+## ✅ Buenas Prácticas y Modularidad
+
+- Separación clara del backend (`realTimeServer.js`) y frontend.
+- Limpieza del usuario al desconectarse.
+- Persistencia ligera mediante cookies.
+- Manejo de errores robusto con Socket.IO.
+- Actualización proactiva de la lista de usuarios conectados.
+
+📸 **Código de desconexión con limpieza:**  
+![Desconexión](https://imgur.com/gD4Yj0L.png)
+
+---
+
+## 🧪 Instrucciones de Ejecución
+
+1. Clonar el repositorio y entrar al proyecto:
+   ```bash
+   git clone <url-del-repo>
+   cd nombre-del-proyecto
+
+
+
+
 
 ## ✅ Comprobación de Código
 
@@ -114,11 +161,11 @@ Tanto el cliente como el servidor usan buenas prácticas, incluyendo:
 
 ## 📌 Conclusiones
 
-La implementación de este proyecto ha sido una experiencia enriquecedora que abarca múltiples aspectos fundamentales del desarrollo web moderno. Hemos logrado crear un sistema de chat **completamente funcional en tiempo real**, que demuestra cómo tecnologías como **Socket.IO** y **Express** pueden trabajar en conjunto para proporcionar una comunicación efectiva, rápida y confiable.
+Este proyecto permitió desarrollar un sistema de chat funcional en tiempo real, con validación de identidad, UI moderna y manejo de sesiones. La incorporación de una lista de usuarios conectados llevó la experiencia a un nivel más interactivo, permitiendo a los participantes visualizar en todo momento quién está presente.
 
-Además, la decisión de usar cookies para persistencia y Bootstrap para interfaz demostró ser una elección acertada, ya que ambos elementos redujeron la complejidad del código y mejoraron significativamente la experiencia de usuario.
+El desarrollo ofreció valiosas lecciones técnicas, como el control de nombres únicos, la sincronización entre cliente-servidor y la modularización eficiente del código.
 
-Desde el punto de vista técnico, fue muy valioso resolver el reto de evitar la duplicación de nombres de usuario, lo que implicó sincronizar validaciones entre cliente y servidor. Este punto es especialmente importante para asegurar una experiencia fluida y sin errores durante el uso del sistema.
+Además, el uso de cookies y Bootstrap facilitó tanto la gestión de sesiones como la creación de una interfaz agradable sin sobrecargar el sistema. En conjunto, este sistema puede servir como base para desarrollos mayores como chats corporativos, aulas virtuales o plataformas de soporte en vivo.
 
 En definitiva, este proyecto no solo permitió explorar aspectos técnicos importantes, sino también reforzar prácticas de diseño de interfaces, validación de entradas y sincronización entre múltiples componentes. Este tipo de sistemas puede ser la base para aplicaciones más grandes, como sistemas de soporte, chats empresariales o herramientas colaborativas.
 
